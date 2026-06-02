@@ -8,65 +8,47 @@ on:
 jobs:
   backup-firebase:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout repositório
         uses: actions/checkout@v4
 
       - name: Instalar dependências
-        run: npm install firebase-admin googleapis
+        run: npm install firebase-admin
 
-      - name: Executar backup Firebase → Google Drive
+      - name: Executar backup Firebase
         run: |
           node -e "
           const admin = require('firebase-admin');
-          const { google } = require('googleapis');
           const fs = require('fs');
 
           const serviceAccount = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT);
-
-          // Init Firebase
-          admin.initializeApp({
-            credential: admin.credential.cert(serviceAccount)
-          });
+          admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
           const db = admin.firestore();
 
-          // Init Google Drive
-          const auth = new google.auth.GoogleAuth({
-            credentials: serviceAccount,
-            scopes: ['https://www.googleapis.com/auth/drive.file']
-          });
-          const drive = google.drive({ version: 'v3', auth });
-
           async function run() {
-            // Buscar todos os documentos
             const snapshot = await db.collection('dados').get();
             const backup = {};
             snapshot.forEach(doc => { backup[doc.id] = doc.data(); });
-
-            // Salvar JSON
             const hoje = new Date().toLocaleDateString('pt-BR', {timeZone: 'America/Sao_Paulo'}).replace(/\//g,'-');
-            const filename = 'backup-leauto-' + hoje + '.json';
+            const filename = 'backups/backup-leauto-' + hoje + '.json';
+            fs.mkdirSync('backups', { recursive: true });
             fs.writeFileSync(filename, JSON.stringify(backup, null, 2));
             console.log('Backup gerado:', filename, '- Documentos:', Object.keys(backup).length);
-
-            // Upload para Google Drive
-            const res = await drive.files.create({
-              requestBody: {
-                name: filename,
-                parents: [process.env.GOOGLE_DRIVE_FOLDER_ID]
-              },
-              media: {
-                mimeType: 'application/json',
-                body: fs.createReadStream(filename)
-              }
-            });
-            console.log('Upload concluído! File ID:', res.data.id);
           }
           run().catch(e => { console.error(e); process.exit(1); });
           "
         env:
           GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
-          GOOGLE_DRIVE_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}
+
+      - name: Salvar backup no repositório
+        run: |
+          git config user.name "Leauto Backup Bot"
+          git config user.email "backup@leauto.com.br"
+          git add backups/
+          git diff --staged --quiet || git commit -m "Backup automático $(TZ='America/Sao_Paulo' date +'%d/%m/%Y')"
+          git push
 
   enviar-emails:
     runs-on: ubuntu-latest
@@ -95,7 +77,7 @@ jobs:
               \"from\": \"Leauto Dashboard <onboarding@resend.dev>\",
               \"to\": [\"rodrigoleta@grupoleauto.com.br\"],
               \"subject\": \"📊 Renault — Report do Dia $DATA\",
-              \"html\": \"<h2>📊 Report Diário Renault</h2><p><strong>Data:</strong> $DATA</p><p>Acesse o dashboard para ver os dados detalhados por loja:</p><p><a href='https://leauto-dashboard.netlify.app'>👉 Abrir Dashboard</a></p><br><small>— Sistema Leauto</small>\"
+              \"html\": \"<h2>📊 Report Diário Renault</h2><p><strong>Data:</strong> $DATA</p><p>Acesse o dashboard para ver os dados detalhados:</p><p><a href='https://leauto-dashboard.netlify.app'>👉 Abrir Dashboard</a></p><br><small>— Sistema Leauto</small>\"
             }"
 
       - name: Enviar report Renault — Danyke
@@ -108,5 +90,5 @@ jobs:
               \"from\": \"Leauto Dashboard <onboarding@resend.dev>\",
               \"to\": [\"danyke.livramento@renault.com\"],
               \"subject\": \"📊 Renault — Report do Dia $DATA\",
-              \"html\": \"<h2>📊 Report Diário Renault</h2><p><strong>Data:</strong> $DATA</p><p>Acesse o dashboard para ver os dados detalhados por loja:</p><p><a href='https://leauto-dashboard.netlify.app'>👉 Abrir Dashboard</a></p><br><small>— Sistema Leauto</small>\"
+              \"html\": \"<h2>📊 Report Diário Renault</h2><p><strong>Data:</strong> $DATA</p><p>Acesse o dashboard para ver os dados detalhados:</p><p><a href='https://leauto-dashboard.netlify.app'>👉 Abrir Dashboard</a></p><br><small>— Sistema Leauto</small>\"
             }"
