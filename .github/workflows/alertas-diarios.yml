@@ -11,56 +11,39 @@ jobs:
     steps:
       - name: Enviar alerta de não preenchimento
         run: |
-          curl -s -X POST https://api.emailjs.com/api/v1.0/email/send \
+          DATA=$(TZ='America/Sao_Paulo' date +'%d/%m/%Y')
+          curl -s -X POST https://api.resend.com/emails \
+            -H "Authorization: Bearer re_ELq6zCkK_4bvypE6uuuxtJW8pQZR84qoN" \
             -H "Content-Type: application/json" \
-            -d '{
-              "service_id": "service_ris6tjh",
-              "template_id": "template_4dii26y",
-              "user_id": "wVGd8W4m0FNcr-FIh",
-              "accessToken": "U0qZgyOBftACxdoP96bGW",
-              "template_params": {
-                "to_email": "rodrigoleta@grupoleauto.com.br",
-                "data": "'"$(TZ='America/Sao_Paulo' date +'%d/%m/%Y')"'",
-                "lojas_alerta": "Verificar dashboard para detalhes das lojas sem preenchimento"
-              }
-            }'
+            -d "{
+              \"from\": \"Leauto Dashboard <onboarding@resend.dev>\",
+              \"to\": [\"rodrigoleta@grupoleauto.com.br\"],
+              \"subject\": \"⚠️ Leauto — Lojas sem preenchimento em $DATA\",
+              \"html\": \"<h2>⚠️ Alerta de Não Preenchimento</h2><p>Olá Rodrigo,</p><p>Uma ou mais lojas não preencheram os dados de hoje (<strong>$DATA</strong>).</p><p>Acesse o dashboard para verificar:</p><p><a href='https://leauto-dashboard.netlify.app'>👉 Abrir Dashboard</a></p><br><small>— Sistema Leauto</small>\"
+            }"
 
       - name: Enviar report Renault — Rodrigo
         run: |
-          curl -s -X POST https://api.emailjs.com/api/v1.0/email/send \
+          DATA=$(TZ='America/Sao_Paulo' date +'%d/%m/%Y')
+          curl -s -X POST https://api.resend.com/emails \
+            -H "Authorization: Bearer re_ELq6zCkK_4bvypE6uuuxtJW8pQZR84qoN" \
             -H "Content-Type: application/json" \
-            -d '{
-              "service_id": "service_ris6tjh",
-              "template_id": "template_7r26vho",
-              "user_id": "wVGd8W4m0FNcr-FIh",
-              "accessToken": "U0qZgyOBftACxdoP96bGW",
-              "template_params": {
-                "to_email": "rodrigoleta@grupoleauto.com.br",
-                "data": "'"$(TZ='America/Sao_Paulo' date +'%d/%m/%Y')"'",
-                "ab_pass":"-","ab_leads":"-","ab_vend":"-","ab_fat":"-","ab_modelos_pass":"-","ab_modelos_vend":"-",
-                "bt_pass":"-","bt_leads":"-","bt_vend":"-","bt_fat":"-","bt_modelos_pass":"-","bt_modelos_vend":"-",
-                "pn_pass":"-","pn_leads":"-","pn_vend":"-","pn_fat":"-","pn_modelos_pass":"-","pn_modelos_vend":"-",
-                "tj_pass":"-","tj_leads":"-","tj_vend":"-","tj_fat":"-","tj_modelos_pass":"-","tj_modelos_vend":"-",
-                "total_pass":"-","total_vend":"-","conv":"-","top_modelos_pass":"-","top_modelos_vend":"-"
-              }
-            }'
+            -d "{
+              \"from\": \"Leauto Dashboard <onboarding@resend.dev>\",
+              \"to\": [\"rodrigoleta@grupoleauto.com.br\"],
+              \"subject\": \"📊 Renault — Report do Dia $DATA\",
+              \"html\": \"<h2>📊 Report Diário Renault</h2><p><strong>Data:</strong> $DATA</p><br><p>Os dados detalhados por loja estão disponíveis no dashboard:</p><p><a href='https://leauto-dashboard.netlify.app'>👉 Abrir Dashboard</a></p><br><small>— Sistema Leauto</small>\"
+            }"
 
       - name: Enviar report Renault — Danyke
         run: |
-          curl -s -X POST https://api.emailjs.com/api/v1.0/email/send \
+          DATA=$(TZ='America/Sao_Paulo' date +'%d/%m/%Y')
+          curl -s -X POST https://api.resend.com/emails \
+            -H "Authorization: Bearer re_ELq6zCkK_4bvypE6uuuxtJW8pQZR84qoN" \
             -H "Content-Type: application/json" \
-            -d '{
-              "service_id": "service_ris6tjh",
-              "template_id": "template_7r26vho",
-              "user_id": "wVGd8W4m0FNcr-FIh",
-              "accessToken": "U0qZgyOBftACxdoP96bGW",
-              "template_params": {
-                "to_email": "danyke.livramento@renault.com",
-                "data": "'"$(TZ='America/Sao_Paulo' date +'%d/%m/%Y')"'",
-                "ab_pass":"-","ab_leads":"-","ab_vend":"-","ab_fat":"-","ab_modelos_pass":"-","ab_modelos_vend":"-",
-                "bt_pass":"-","bt_leads":"-","bt_vend":"-","bt_fat":"-","bt_modelos_pass":"-","bt_modelos_vend":"-",
-                "pn_pass":"-","pn_leads":"-","pn_vend":"-","pn_fat":"-","pn_modelos_pass":"-","pn_modelos_vend":"-",
-                "tj_pass":"-","tj_leads":"-","tj_vend":"-","tj_fat":"-","tj_modelos_pass":"-","tj_modelos_vend":"-",
-                "total_pass":"-","total_vend":"-","conv":"-","top_modelos_pass":"-","top_modelos_vend":"-"
-              }
-            }'
+            -d "{
+              \"from\": \"Leauto Dashboard <onboarding@resend.dev>\",
+              \"to\": [\"danyke.livramento@renault.com\"],
+              \"subject\": \"📊 Renault — Report do Dia $DATA\",
+              \"html\": \"<h2>📊 Report Diário Renault</h2><p><strong>Data:</strong> $DATA</p><br><p>Os dados detalhados por loja estão disponíveis no dashboard:</p><p><a href='https://leauto-dashboard.netlify.app'>👉 Abrir Dashboard</a></p><br><small>— Sistema Leauto</small>\"
+            }"
