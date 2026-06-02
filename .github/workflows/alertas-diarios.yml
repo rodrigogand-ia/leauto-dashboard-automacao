@@ -9,52 +9,58 @@ jobs:
   enviar-alertas:
     runs-on: ubuntu-latest
     steps:
-      - name: Buscar dados Firebase e enviar emails
+      - name: Enviar alerta de não preenchimento
         run: |
-          node -e "
-          const https = require('https');
-
-          function post(data) {
-            return new Promise((resolve, reject) => {
-              const body = JSON.stringify(data);
-              const req = https.request({
-                hostname: 'api.emailjs.com',
-                path: '/api/v1.0/email/send',
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Content-Length': body.length }
-              }, res => { resolve(res.statusCode); });
-              req.on('error', reject);
-              req.write(body);
-              req.end();
-            });
-          }
-
-          const hoje = new Date().toLocaleDateString('pt-BR', {timeZone: 'America/Sao_Paulo'});
-
-          Promise.all([
-            post({
-              service_id: '${{ secrets.EMAILJS_SERVICE_ID }}',
-              template_id: '${{ secrets.EMAILJS_TEMPLATE_ALERTA }}',
-              user_id: '${{ secrets.EMAILJS_PUBLIC_KEY }}',
-              template_params: {
-                to_email: 'rodrigoleta@grupoleauto.com.br',
-                data: hoje,
-                lojas_alerta: 'Verificar dashboard para detalhes das lojas sem preenchimento'
+          curl -s -X POST https://api.emailjs.com/api/v1.0/email/send \
+            -H "Content-Type: application/json" \
+            -d '{
+              "service_id": "service_ris6tjh",
+              "template_id": "template_4dii26y",
+              "user_id": "wVGd8W4m0FNcr-FIh",
+              "accessToken": "U0qZgyOBftACxdoP96bGW",
+              "template_params": {
+                "to_email": "rodrigoleta@grupoleauto.com.br",
+                "data": "'"$(TZ='America/Sao_Paulo' date +'%d/%m/%Y')"'",
+                "lojas_alerta": "Verificar dashboard para detalhes das lojas sem preenchimento"
               }
-            }),
-            post({
-              service_id: '${{ secrets.EMAILJS_SERVICE_ID }}',
-              template_id: '${{ secrets.EMAILJS_TEMPLATE_REPORT }}',
-              user_id: '${{ secrets.EMAILJS_PUBLIC_KEY }}',
-              template_params: {
-                to_email: 'rodrigoleta@grupoleauto.com.br',
-                data: hoje,
-                ab_pass:'-',ab_leads:'-',ab_vend:'-',ab_fat:'-',ab_modelos_pass:'-',ab_modelos_vend:'-',
-                bt_pass:'-',bt_leads:'-',bt_vend:'-',bt_fat:'-',bt_modelos_pass:'-',bt_modelos_vend:'-',
-                pn_pass:'-',pn_leads:'-',pn_vend:'-',pn_fat:'-',pn_modelos_pass:'-',pn_modelos_vend:'-',
-                tj_pass:'-',tj_leads:'-',tj_vend:'-',tj_fat:'-',tj_modelos_pass:'-',tj_modelos_vend:'-',
-                total_pass:'-',total_vend:'-',conv:'-',top_modelos_pass:'-',top_modelos_vend:'-'
+            }'
+
+      - name: Enviar report Renault — Rodrigo
+        run: |
+          curl -s -X POST https://api.emailjs.com/api/v1.0/email/send \
+            -H "Content-Type: application/json" \
+            -d '{
+              "service_id": "service_ris6tjh",
+              "template_id": "template_7r26vho",
+              "user_id": "wVGd8W4m0FNcr-FIh",
+              "accessToken": "U0qZgyOBftACxdoP96bGW",
+              "template_params": {
+                "to_email": "rodrigoleta@grupoleauto.com.br",
+                "data": "'"$(TZ='America/Sao_Paulo' date +'%d/%m/%Y')"'",
+                "ab_pass":"-","ab_leads":"-","ab_vend":"-","ab_fat":"-","ab_modelos_pass":"-","ab_modelos_vend":"-",
+                "bt_pass":"-","bt_leads":"-","bt_vend":"-","bt_fat":"-","bt_modelos_pass":"-","bt_modelos_vend":"-",
+                "pn_pass":"-","pn_leads":"-","pn_vend":"-","pn_fat":"-","pn_modelos_pass":"-","pn_modelos_vend":"-",
+                "tj_pass":"-","tj_leads":"-","tj_vend":"-","tj_fat":"-","tj_modelos_pass":"-","tj_modelos_vend":"-",
+                "total_pass":"-","total_vend":"-","conv":"-","top_modelos_pass":"-","top_modelos_vend":"-"
               }
-            })
-          ]).then(() => console.log('Emails enviados com sucesso!'));
-          "
+            }'
+
+      - name: Enviar report Renault — Danyke
+        run: |
+          curl -s -X POST https://api.emailjs.com/api/v1.0/email/send \
+            -H "Content-Type: application/json" \
+            -d '{
+              "service_id": "service_ris6tjh",
+              "template_id": "template_7r26vho",
+              "user_id": "wVGd8W4m0FNcr-FIh",
+              "accessToken": "U0qZgyOBftACxdoP96bGW",
+              "template_params": {
+                "to_email": "danyke.livramento@renault.com",
+                "data": "'"$(TZ='America/Sao_Paulo' date +'%d/%m/%Y')"'",
+                "ab_pass":"-","ab_leads":"-","ab_vend":"-","ab_fat":"-","ab_modelos_pass":"-","ab_modelos_vend":"-",
+                "bt_pass":"-","bt_leads":"-","bt_vend":"-","bt_fat":"-","bt_modelos_pass":"-","bt_modelos_vend":"-",
+                "pn_pass":"-","pn_leads":"-","pn_vend":"-","pn_fat":"-","pn_modelos_pass":"-","pn_modelos_vend":"-",
+                "tj_pass":"-","tj_leads":"-","tj_vend":"-","tj_fat":"-","tj_modelos_pass":"-","tj_modelos_vend":"-",
+                "total_pass":"-","total_vend":"-","conv":"-","top_modelos_pass":"-","top_modelos_vend":"-"
+              }
+            }'
