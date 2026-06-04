@@ -1,0 +1,49 @@
+{
+  "renault-abolicao_2026_05": {
+    "1_agendamentos": "1",
+    "2_pass_regs": "[{\"model\":\"Kwid\",\"qty\":1}]",
+    "1_leads": "5",
+    "1_avaliacoes": "0",
+    "1_pass_regs": "[{\"model\":\"Kwid\",\"qty\":1}]",
+    "1_faturados": "0",
+    "2_leads": "4",
+    "2_avaliacoes": "1"
+  },
+  "renault-botafogo_2026_05": {
+    "1_agendamentos": "1",
+    "1_leads": "4",
+    "1_vend_regs": "[{\"model\":\"Kwid\",\"qty\":1}]",
+    "1_pass_regs": "[{\"model\":\"Kwid\",\"qty\":1}]",
+    "1_faturados": "0",
+    "1_avaliacoes": "0",
+    "2_pass_regs": "[{\"model\":\"Duster\",\"qty\":1}]",
+    "2_leads": "0",
+    "2_avaliacoes": "1",
+    "2_agendamentos": "1",
+    "2_faturados": "0"
+  },
+  "renault-penha_2026_05": {
+    "1_faturados": "0",
+    "1_leads": "3",
+    "1_avaliacoes": "0",
+    "1_agendamentos": "1",
+    "1_pass_regs": "[{\"model\":\"Kwid\",\"qty\":1}]",
+    "2_pass_regs": "[{\"model\":\"Duster\",\"qty\":2}]",
+    "2_leads": "3",
+    "2_avaliacoes": "3",
+    "2_faturados": "0",
+    "2_agendamentos": "0"
+  },
+  "renault-tijuca_2026_05": {
+    "1_agendamentos": "0",
+    "1_faturados": "0",
+    "1_pass_regs": "[{\"model\":\"Kwid\",\"qty\":1}]",
+    "1_avaliacoes": "0",
+    "1_leads": "5",
+    "2_pass_regs": "[{\"model\":\"Kwid\",\"qty\":1},{\"model\":\"Duster\",\"qty\":1}]",
+    "2_leads": "3",
+    "2_avaliacoes": "0",
+    "2_agendamentos": "1",
+    "2_faturados": "0"
+  }
+}
